@@ -5,22 +5,22 @@ enum URLPathComponent {
 
 extension URLPathComponent {
   init(_ value: String) {
-    if value.hasPrefix("<") && value.hasSuffix(">") {
-      let start = value.index(after: value.startIndex)
-      let end = value.index(before: value.endIndex)
-      let placeholder = value[start..<end] // e.g. "<int:id>" -> "int:id"
-      let typeAndKey = placeholder.components(separatedBy: ":")
-      if typeAndKey.count == 1 { // any-type placeholder
-        self = .placeholder(type: nil, key: typeAndKey[0])
-      } else if typeAndKey.count == 2 {
-        self = .placeholder(type: typeAndKey[0], key: typeAndKey[1])
+      if value.hasPrefix("[") && value.hasSuffix("]") {
+        let start = value.index(after: value.startIndex)
+        let end = value.index(before: value.endIndex)
+        let placeholder = value[start..<end] // e.g. "[int:id]" -> "int:id"
+        let typeAndKey = placeholder.components(separatedBy: ":")
+        if typeAndKey.count == 1 { // any-type placeholder
+          self = .placeholder(type: nil, key: typeAndKey[0])
+        } else if typeAndKey.count == 2 {
+          self = .placeholder(type: typeAndKey[0], key: typeAndKey[1])
+        } else {
+          self = .plain(value)
+        }
       } else {
         self = .plain(value)
       }
-    } else {
-      self = .plain(value)
     }
-  }
 }
 
 extension URLPathComponent: Equatable {
